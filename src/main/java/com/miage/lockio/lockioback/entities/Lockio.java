@@ -1,10 +1,16 @@
 package com.miage.lockio.lockioback.entities;
 
+import com.miage.lockio.lockioback.enums.LockioSize;
+import com.miage.lockio.lockioback.enums.LockioStatus;
 import jakarta.persistence.*;
-
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
 @Table(name = "lockio")
 public class Lockio {
 
@@ -12,8 +18,13 @@ public class Lockio {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String zone;
+    //TODO ADD ANNOTATION TO LINK LOCKIO WITH BLOCK
+    private long blockId;
 
-    @OneToMany()
-    private List<Locker> lockers;
+    //TODO ADD ANNOTATION TO LINK
+    private long localId;
+
+    private LockioSize size;
+
+    private LockioStatus status;
 }
