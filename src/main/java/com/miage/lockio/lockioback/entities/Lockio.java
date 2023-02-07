@@ -13,7 +13,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @Setter
 @Getter
-@Table(name = "lockio")
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"block_id", "local_id"})
+})
 public class Lockio {
 
     @Id
@@ -21,12 +23,16 @@ public class Lockio {
     private long id;
 
     //TODO ADD ANNOTATION TO LINK LOCKIO WITH BLOCK
+    @Column(name = "block_id")
     private long blockId;
 
-    //TODO ADD ANNOTATION TO LINK
+    //TODO ADD ANNOTATION TO LINK AND AUTO INCREMENT LOCAL ID
+    @Column(name = "local_id")
     private long localId;
 
+    @Enumerated(EnumType.STRING)
     private LockioSize size;
 
+    @Enumerated(EnumType.STRING)
     private LockioStatus status;
 }

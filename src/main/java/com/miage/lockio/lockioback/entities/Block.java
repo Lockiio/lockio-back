@@ -22,11 +22,15 @@ public class Block {
 
     private String name;
 
-    //private Coordinates coordinates;
+    @OneToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name = "coordinates_id")
+    private Coordinates coordinates;
 
     private String zone;
 
+    @Enumerated(EnumType.STRING)
     private BlockStatus status;
 
+    @Enumerated(EnumType.STRING)
     private Privacy privacy;
 }
