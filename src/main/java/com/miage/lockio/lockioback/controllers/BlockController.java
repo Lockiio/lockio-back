@@ -1,7 +1,7 @@
 package com.miage.lockio.lockioback.controllers;
 
 import com.miage.lockio.lockioback.entities.Block;
-import com.miage.lockio.lockioback.services.BlockService;
+import com.miage.lockio.lockioback.dao.services.BlockService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
