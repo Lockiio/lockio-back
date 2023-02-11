@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Collection;
+
 @Entity
 @Getter
 @Setter
@@ -22,9 +24,9 @@ public class Block {
 
     private String name;
 
-    @OneToOne(cascade=CascadeType.ALL)
-    @JoinColumn(name = "coordinates_id")
-    private Coordinates coordinates;
+    private String longitude;
+
+    private String latitude;
 
     private String zone;
 
@@ -33,4 +35,7 @@ public class Block {
 
     @Enumerated(EnumType.STRING)
     private Privacy privacy;
+
+    @OneToMany(mappedBy = "block")
+    private Collection<Lockio> lockio;
 }

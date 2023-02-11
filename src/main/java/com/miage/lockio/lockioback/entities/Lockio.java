@@ -14,7 +14,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @Table(uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"block_id", "local_id"})
+        @UniqueConstraint(columnNames = {"block_id","local_id"})
 })
 public class Lockio {
 
@@ -23,8 +23,8 @@ public class Lockio {
     private long id;
 
     //TODO ADD ANNOTATION TO LINK LOCKIO WITH BLOCK
-    @Column(name = "block_id")
-    private long blockId;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Block block;
 
     //TODO ADD ANNOTATION TO LINK AND AUTO INCREMENT LOCAL ID
     @Column(name = "local_id")
@@ -35,4 +35,5 @@ public class Lockio {
 
     @Enumerated(EnumType.STRING)
     private LockioStatus status;
+
 }
