@@ -4,6 +4,7 @@ import com.miage.lockio.lockioback.enums.LockioSize;
 import com.miage.lockio.lockioback.enums.LockioStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
@@ -11,7 +12,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
-@Table(name = "lockio")
+@Getter
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"block_id","local_id"})
+})
 public class Lockio {
 
     @Id
@@ -19,12 +23,17 @@ public class Lockio {
     private long id;
 
     //TODO ADD ANNOTATION TO LINK LOCKIO WITH BLOCK
-    private long blockId;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Block block;
 
-    //TODO ADD ANNOTATION TO LINK
+    //TODO ADD ANNOTATION TO LINK AND AUTO INCREMENT LOCAL ID
+    @Column(name = "local_id")
     private long localId;
 
+    @Enumerated(EnumType.STRING)
     private LockioSize size;
 
+    @Enumerated(EnumType.STRING)
     private LockioStatus status;
+
 }

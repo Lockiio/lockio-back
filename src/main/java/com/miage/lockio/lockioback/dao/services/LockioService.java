@@ -1,7 +1,7 @@
-package com.miage.lockio.lockioback.services;
+package com.miage.lockio.lockioback.dao.services;
 
 import com.miage.lockio.lockioback.entities.Lockio;
-import com.miage.lockio.lockioback.repositories.LockioRepository;
+import com.miage.lockio.lockioback.dao.repositories.LockioRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

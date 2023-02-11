@@ -1,16 +1,14 @@
 package com.miage.lockio.lockioback.controllers;
 
 import com.miage.lockio.lockioback.entities.Lockio;
-import com.miage.lockio.lockioback.services.LockioService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.miage.lockio.lockioback.dao.services.LockioService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/lockios")
+@RequestMapping("/api/lockio/1/")
 public class LockioController {
 
     private final LockioService lockioService;
@@ -24,9 +22,12 @@ public class LockioController {
         return this.lockioService.getAllLockios();
     }
 
-    @PostMapping()
-    public void addLockio(Lockio lockio) {
+    @PostMapping(consumes = "application/json", produces = "application/json")
+    public ResponseEntity<Lockio> addLockio(@RequestBody Lockio lockio) {
         this.lockioService.addLockio(lockio);
-        //TODO NEED TO RETURN THE ID of the created lockio
+        if (lockio.getId() == 0) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(lockio);
     }
 }

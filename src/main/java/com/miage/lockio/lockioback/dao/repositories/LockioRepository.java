@@ -1,4 +1,4 @@
-package com.miage.lockio.lockioback.repositories;
+package com.miage.lockio.lockioback.dao.repositories;
 
 import com.miage.lockio.lockioback.entities.Lockio;
 import org.springframework.data.jpa.repository.JpaRepository;
