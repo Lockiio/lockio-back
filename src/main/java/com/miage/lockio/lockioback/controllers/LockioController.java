@@ -4,6 +4,7 @@ import com.miage.lockio.lockioback.entities.Lockio;
 import com.miage.lockio.lockioback.dao.services.LockioService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
 public class LockioController {
 
     private final LockioService lockioService;
+    private static final String RASP_PATH = "http://localhost:5000/";
 
     public LockioController(LockioService lockioService) {
         this.lockioService = lockioService;
@@ -20,6 +22,15 @@ public class LockioController {
     @GetMapping()
     public List<Lockio> getLockios() {
         return this.lockioService.getAllLockios();
+    }
+
+    @GetMapping("/status")
+    public String getstatusLockios() {
+
+        RestTemplate restTemplate = new RestTemplate();
+        return restTemplate.getForObject(RASP_PATH+"status", String.class);
+
+
     }
 
     @PostMapping(consumes = "application/json", produces = "application/json")
