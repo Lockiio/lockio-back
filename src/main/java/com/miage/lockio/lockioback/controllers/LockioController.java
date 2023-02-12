@@ -1,22 +1,26 @@
 package com.miage.lockio.lockioback.controllers;
 
-import com.miage.lockio.lockioback.entities.Lockio;
 import com.miage.lockio.lockioback.dao.services.LockioService;
+import com.miage.lockio.lockioback.dao.services.RaspberryService;
+import com.miage.lockio.lockioback.entities.Lockio;
+import com.miage.lockio.lockioback.enums.LockioStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
+
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/lockio/1/")
+@RequestMapping("/api/lockio")
 public class LockioController {
 
     private final LockioService lockioService;
-    private static final String RASP_PATH = "http://localhost:5000/";
+    private final RaspberryService raspberryService;
 
-    public LockioController(LockioService lockioService) {
+    public LockioController(LockioService lockioService, RaspberryService raspberryService) {
         this.lockioService = lockioService;
+        this.raspberryService = raspberryService;
     }
 
     @GetMapping()
@@ -24,12 +28,16 @@ public class LockioController {
         return this.lockioService.getAllLockios();
     }
 
-    @GetMapping("/status")
-    public String getstatusLockios() {
+    @GetMapping("/{id}")
+    public Optional<Lockio> getLockio(@PathVariable long id ) {
+        return this.lockioService.getLockio(id);
+    }
 
-        RestTemplate restTemplate = new RestTemplate();
-        return restTemplate.getForObject(RASP_PATH+"status", String.class);
-
+    @PatchMapping("/{id}")
+    public ResponseEntity<Lockio> updateLockio(@PathVariable Long id){
+        LockioStatus status=LockioStatus.valueOf(raspberryService.getStatusLockio(id));
+        this.lockioService.updateStatusLockio(id,status);
+        return ResponseEntity.ok(lockioService.getLockio(id).get());
 
     }
 
