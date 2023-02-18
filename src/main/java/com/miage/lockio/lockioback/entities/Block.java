@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.geo.Point;
 
 import java.util.Collection;
 
@@ -24,11 +25,7 @@ public class Block {
 
     private String name;
 
-    private String longitude;
-
-    private String latitude;
-
-    private String zone;
+   private Point coordinate;
 
     @Enumerated(EnumType.STRING)
     private BlockStatus status;

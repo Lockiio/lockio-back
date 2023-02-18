@@ -23,7 +23,8 @@ public class Lockio {
     private long id;
 
     //TODO ADD ANNOTATION TO LINK LOCKIO WITH BLOCK
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
+    @Column(name="block_id")
     private Block block;
 
     //TODO ADD ANNOTATION TO LINK AND AUTO INCREMENT LOCAL ID
