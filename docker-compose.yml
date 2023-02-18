@@ -12,3 +12,21 @@ services:
     ports:
       - "3306:3306"
     command: --character-set-server=utf8 --collation-server=utf8_general_ci
+
+  block-1:
+    image: lockio/lockio-block:latest
+    container_name: block-1
+    ports:
+      - "8001:8000"
+
+  block-2:
+    image: lockio/lockio-block:latest
+    container_name: block-2
+    ports:
+      - "8002:8000"
+
+  block-3:
+    image: lockio/lockio-block:latest
+    container_name: block-3
+    ports:
+      - "8003:8000"
