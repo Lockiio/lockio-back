@@ -2,6 +2,7 @@ package com.miage.lockio.lockioback.dao.services;
 
 import com.miage.lockio.lockioback.entities.Lockio;
 import com.miage.lockio.lockioback.dao.repositories.LockioRepository;
+import com.miage.lockio.lockioback.enums.LockioStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,4 +27,8 @@ public class LockioService {
     public void addLockio(Lockio lockio) {
         this.lockioRepository.save(lockio);
     }
+    public void updateStatusLockio(Long id, LockioStatus status){ this.lockioRepository.findById(id).get().setStatus(status);}
+
 }
+
+
