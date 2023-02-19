@@ -10,7 +10,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.geo.Point;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Getter
@@ -36,5 +38,5 @@ public class Block {
 
     @OneToMany(mappedBy = "block")
     @JsonIgnore
-    private Collection<Lockio> lockio;
+    private List<Lockio> lockio;
 }

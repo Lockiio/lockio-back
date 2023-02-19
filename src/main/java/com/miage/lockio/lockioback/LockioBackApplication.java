@@ -40,7 +40,6 @@ public class LockioBackApplication implements CommandLineRunner {
         block.setStatus(BlockStatus.AVAILABLE);
         block.setPrivacy(Privacy.PUBLIC);
         blockService.save(block);
-
         List<Lockio> lockios = new ArrayList<>();
 
         for (int i = 1; i <= 5; i++) {

@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("api/lockio/v1/blocks")
+@RequestMapping("api/lockio/v1")
 public class LockioController {
 
     private final LockioService lockioService;
@@ -24,15 +24,13 @@ public class LockioController {
     }
 
 
-    @GetMapping("/1/lockios/{lockio-id}")
+    @GetMapping("/lockios/{lockio-id}")
     public Optional<Lockio> getLockio( @PathVariable("lockio-id") long id_lockio ) {
         return this.lockioService.getLockio(id_lockio);
     }
 
 
-
-
-    @PatchMapping("/1/lockios/{lockio-id}")
+    @PatchMapping("/lockios/{lockio-id}/test")
     public Lockio updateLockio(@PathVariable ("lockio-id") Long id){
         LockioStatus status=LockioStatus.valueOf(raspberryService.updateStatusLockio(id));
         this.lockioService.updateStatusLockio(id,status);
@@ -40,14 +38,13 @@ public class LockioController {
 
     }
 
+    @PatchMapping("/lockios/{lockio-id}")
+    public ResponseEntity<Lockio >patchLockio(@PathVariable ("lockio-id") Long id, @RequestBody String lockioStatus ){
+        return raspberryService.updateStatus(id,lockioStatus);
+    //ne fonctionne pas à modifier
 
-    @PostMapping(consumes = "application/json", produces = "application/json")
-    public ResponseEntity<Lockio> addLockio(@RequestBody Lockio lockio) {
-        this.lockioService.addLockio(lockio);
-        if (lockio.getId() == 0) {
-            return ResponseEntity.badRequest().build();
-        }
-        return ResponseEntity.ok(lockio);
     }
+
+
 
 }
