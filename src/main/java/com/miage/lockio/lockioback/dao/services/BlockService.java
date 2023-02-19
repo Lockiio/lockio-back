@@ -25,4 +25,10 @@ public class BlockService {
     public void addBlock(Block Block) {
         this.blockRepository.save(Block);
     }
+
+    public Block save(Block block) {
+        return blockRepository.save(block);
+    }
+
+
 }

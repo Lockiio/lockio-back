@@ -15,8 +15,8 @@ public class RaspberryService {
         this.restTemplate=restTemplate;
     }
 
-    public String getStatusLockio(long id ) {
-        ResponseEntity<Map> response= restTemplate.getForEntity(RASP_PATH +id+"/status", Map.class);
+    public String updateStatusLockio(long id ) {
+        ResponseEntity<Map> response= restTemplate.getForEntity(RASP_PATH +"api/rasp/v1/lockio/" +id, Map.class);
         Map<String, Object> responseBody = response.getBody();
         return responseBody.get("status").toString();
 

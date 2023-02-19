@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/lockio")
+@RequestMapping("api/lockio/v1/blocks")
 public class LockioController {
 
     private final LockioService lockioService;
@@ -23,23 +23,23 @@ public class LockioController {
         this.raspberryService = raspberryService;
     }
 
-    @GetMapping()
-    public List<Lockio> getLockios() {
-        return this.lockioService.getAllLockios();
+
+    @GetMapping("/1/lockios/{lockio-id}")
+    public Optional<Lockio> getLockio( @PathVariable("lockio-id") long id_lockio ) {
+        return this.lockioService.getLockio(id_lockio);
     }
 
-    @GetMapping("/{id}")
-    public Optional<Lockio> getLockio(@PathVariable long id ) {
-        return this.lockioService.getLockio(id);
-    }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<Lockio> updateLockio(@PathVariable Long id){
-        LockioStatus status=LockioStatus.valueOf(raspberryService.getStatusLockio(id));
+
+
+    @PatchMapping("/1/lockios/{lockio-id}")
+    public Lockio updateLockio(@PathVariable ("lockio-id") Long id){
+        LockioStatus status=LockioStatus.valueOf(raspberryService.updateStatusLockio(id));
         this.lockioService.updateStatusLockio(id,status);
-        return ResponseEntity.ok(lockioService.getLockio(id).get());
+        return lockioService.getLockio(id).get();
 
     }
+
 
     @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<Lockio> addLockio(@RequestBody Lockio lockio) {
@@ -49,4 +49,5 @@ public class LockioController {
         }
         return ResponseEntity.ok(lockio);
     }
+
 }

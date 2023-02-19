@@ -1,5 +1,6 @@
 package com.miage.lockio.lockioback.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.miage.lockio.lockioback.enums.LockioSize;
 import com.miage.lockio.lockioback.enums.LockioStatus;
 import jakarta.persistence.*;
@@ -23,8 +24,10 @@ public class Lockio {
     private long id;
 
     //TODO ADD ANNOTATION TO LINK LOCKIO WITH BLOCK
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.MERGE)
     @JoinColumn (name="block_id")
+    @JsonIgnore
     private Block block;
 
     //TODO ADD ANNOTATION TO LINK AND AUTO INCREMENT LOCAL ID

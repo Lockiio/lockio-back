@@ -1,5 +1,6 @@
 package com.miage.lockio.lockioback.dao.services;
 
+import com.miage.lockio.lockioback.entities.Block;
 import com.miage.lockio.lockioback.entities.Lockio;
 import com.miage.lockio.lockioback.dao.repositories.LockioRepository;
 import com.miage.lockio.lockioback.enums.LockioStatus;
@@ -25,9 +26,14 @@ public class LockioService {
     }
 
     public void addLockio(Lockio lockio) {
+
         this.lockioRepository.save(lockio);
     }
     public void updateStatusLockio(Long id, LockioStatus status){ this.lockioRepository.findById(id).get().setStatus(status);}
+    public Lockio save(Lockio lockio) {
+        return lockioRepository.save(lockio);
+    }
+
 
 }
 

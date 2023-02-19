@@ -1,5 +1,6 @@
 package com.miage.lockio.lockioback.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.miage.lockio.lockioback.enums.BlockStatus;
 import com.miage.lockio.lockioback.enums.Privacy;
 import jakarta.persistence.*;
@@ -34,5 +35,6 @@ public class Block {
     private Privacy privacy;
 
     @OneToMany(mappedBy = "block")
+    @JsonIgnore
     private Collection<Lockio> lockio;
 }
