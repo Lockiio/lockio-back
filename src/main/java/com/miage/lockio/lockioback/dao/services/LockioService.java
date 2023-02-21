@@ -29,7 +29,9 @@ public class LockioService {
 
         this.lockioRepository.save(lockio);
     }
-    public void updateStatusLockio(Long id, LockioStatus status){ this.lockioRepository.findById(id).get().setStatus(status);}
+    public void updateStatusLockio(Long id, LockioStatus status){ Lockio lockio =this.lockioRepository.findById(id).get();
+        lockio.setStatus(status);
+    this.lockioRepository.save(lockio);}
     public Lockio save(Lockio lockio) {
         return lockioRepository.save(lockio);
     }
