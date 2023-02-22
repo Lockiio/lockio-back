@@ -24,16 +24,7 @@ public class RaspberryService {
         this.restTemplate=restTemplate;
     }
 
-    public String updateStatusLockio(long id ) {
-        ResponseEntity<Map> response= restTemplate.getForEntity(RASP_PATH + id+"/test", Map.class);
-        Map<String, Object> responseBody = response.getBody();
-        return responseBody.get("status").toString();
-
-    }
-
     public LockioStatus updateStatus(long id , String action) {
-
-
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
@@ -41,21 +32,20 @@ public class RaspberryService {
 
         Lockio lockio= this.restTemplate.patchForObject(RASP_PATH  +id, request, Lockio.class);
        // Lockio Lockio = response.getBody();
-
         return lockio.getStatus();
     }
 
-
     public Lockio getLockio(long id) {
-
-        Lockio lockio= restTemplate.getForObject(RASP_PATH +id, Lockio.class);
+        Lockio lockio= restTemplate.getForObject(RASP_PATH + id, Lockio.class);
         return lockio;
     }
 
     public List<Lockio> getLockios() {
-        ResponseEntity<Lockio[]> response= restTemplate.exchange(RASP_PATH, HttpMethod.GET, null,Lockio[].class);
-        return Arrays.asList(response.getBody());
-
+        ResponseEntity<List<Lockio>> response = restTemplate.exchange(RASP_PATH,
+                HttpMethod.GET, null, new ParameterizedTypeReference<List<Lockio>>() {
+                });
+        List<Lockio> lockios = response.getBody();
+        return lockios;
     }
 
 

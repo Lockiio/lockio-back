@@ -39,13 +39,15 @@ public class BlockController {
 
     @GetMapping("/blocks/{block-id}/lockios")
     public List<Lockio> getLockios(@PathVariable("block-id") long id) throws JsonProcessingException {
-       // return this.raspberryService.getLockios();
-       return this.blockService.getBlock(id).get().getLockio();
+       List<Lockio> lockios = this.raspberryService.getLockios();
+       for (Lockio lockio:lockios) {
+           this.lockioService.updateStatusLockio(lockio.getId(),lockio.getStatus());
+       }
+        return this.blockService.getBlock(id).get().getLockio();
     }
 
     @GetMapping("/blocks/{block-id}/lockios/{local-lockio-id}")
     public Lockio getLockios(@PathVariable("block-id") long id_block,@PathVariable("local-lockio-id") int idLocal ) {
-
         return this.blockService.getBlock(id_block).get().getLockio().get(idLocal-1);
     }
 
