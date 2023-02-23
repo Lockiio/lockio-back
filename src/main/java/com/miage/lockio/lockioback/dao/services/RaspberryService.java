@@ -1,8 +1,5 @@
 package com.miage.lockio.lockioback.dao.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.miage.lockio.lockioback.entities.Lockio;
 import com.miage.lockio.lockioback.enums.LockioStatus;
 import org.springframework.core.ParameterizedTypeReference;
@@ -10,12 +7,8 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 @Service
-
 public class RaspberryService {
     private static final String RASP_PATH = "http://localhost:5000/api/rasp/1/lockios/";
     private final RestTemplate restTemplate ;

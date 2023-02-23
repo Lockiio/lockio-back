@@ -34,29 +34,22 @@ public class LockioBackApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-
-
         Block block = new Block();
         block.setName("LockioPaulSab");
         block.setCoordinate(new Point(00.00000, 0.0000));
         block.setStatus(BlockStatus.AVAILABLE);
         block.setPrivacy(Privacy.PUBLIC);
-        blockService.save(block);
+        blockService.addBlock(block);
         List<Lockio> lockios = new ArrayList<>();
-
-        for (int i = 1; i <=8 ; i++) {
+        for (int i = 1; i <= 8; i++) {
             Lockio lockio = new Lockio();
             lockio.setLocalId(i);
             lockio.setSize(LockioSize.SMALL);
             lockio.setStatus(LockioStatus.AVAILABLE);
             lockio.setBlock(block);
             lockios.add(lockio);
-            lockioService.save(lockio);
-
+            lockioService.addLockio(lockio);
         }
         block.setLockio(lockios);
-        blockService.save(block);
-
-
     }
 }
