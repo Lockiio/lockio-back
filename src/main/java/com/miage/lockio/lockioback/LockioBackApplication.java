@@ -33,7 +33,7 @@ public class LockioBackApplication implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         Block block = new Block();
         block.setName("LockioPaulSab");
         block.setCoordinate(new Point(00.00000, 0.0000));
@@ -41,15 +41,15 @@ public class LockioBackApplication implements CommandLineRunner {
         block.setPrivacy(Privacy.PUBLIC);
         blockService.addBlock(block);
         List<Lockio> lockios = new ArrayList<>();
-        for (int i = 1; i <= 8; i++) {
-            Lockio lockio = new Lockio();
-            lockio.setLocalId(i);
-            lockio.setSize(LockioSize.SMALL);
-            lockio.setStatus(LockioStatus.AVAILABLE);
-            lockio.setBlock(block);
-            lockios.add(lockio);
-            lockioService.addLockio(lockio);
-        }
+        lockios.add(new Lockio((long) 1, block, (long) 1, LockioSize.SMALL, LockioStatus.OCCUPIED));
+        lockios.add(new Lockio((long) 2, block, (long) 2, LockioSize.SMALL, LockioStatus.AVAILABLE));
+        lockios.add(new Lockio((long) 3, block, (long) 3, LockioSize.MEDIUM, LockioStatus.AVAILABLE));
+        lockios.add(new Lockio((long) 4, block, (long) 4, LockioSize.MEDIUM, LockioStatus.AVAILABLE));
+        lockios.add(new Lockio((long) 5, block, (long) 5, LockioSize.MEDIUM, LockioStatus.OCCUPIED));
+        lockios.add(new Lockio((long) 6, block, (long) 6, LockioSize.MEDIUM, LockioStatus.OCCUPIED));
+        lockios.add(new Lockio((long) 7, block, (long) 7, LockioSize.LARGE, LockioStatus.DISABLED));
+        lockios.add(new Lockio((long) 8, block, (long) 8, LockioSize.LARGE, LockioStatus.DISABLED));
+        lockioService.addLockios(lockios);
         block.setLockio(lockios);
     }
 }

@@ -17,27 +17,42 @@ public class RaspberryService {
         this.restTemplate=restTemplate;
     }
 
-    public LockioStatus updateStatus(long id , String action) {
+    /**
+     * Update the status of a lockio. Returns the status of the lockio updated.
+     * @param id
+     * @param action
+     * @return LockioStatus
+     */
+    public LockioStatus updateStatus(Long id , String action) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-
         HttpEntity<String> request = new HttpEntity<>(action, headers);
-
-        Lockio lockio= this.restTemplate.patchForObject(RASP_PATH  +id, request, Lockio.class);
-       // Lockio Lockio = response.getBody();
+        Lockio lockio = this.restTemplate.patchForObject(RASP_PATH + id, request, Lockio.class);
         return lockio.getStatus();
     }
 
-    public Lockio getLockio(long id) {
-        Lockio lockio= restTemplate.getForObject(RASP_PATH + id, Lockio.class);
+    /**
+     * Get a unique lockio by id
+     * @param id
+     * @return Lockio
+     */
+    public Lockio getLockio(Long id) {
+        Lockio lockio = restTemplate.getForObject(RASP_PATH + id, Lockio.class);
         return lockio;
     }
 
+    /**
+     * Get all lockios
+     * @return List<Lockio>
+     */
     public List<Lockio> getLockios() {
         ResponseEntity<List<Lockio>> response = restTemplate.exchange(RASP_PATH,
-                HttpMethod.GET, null, new ParameterizedTypeReference<List<Lockio>>() {
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<Lockio>>() {
                 });
         List<Lockio> lockios = response.getBody();
+        System.out.println(lockios);
         return lockios;
     }
 

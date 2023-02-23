@@ -18,21 +18,18 @@ import lombok.Setter;
         @UniqueConstraint(columnNames = {"block_id","local_id"})
 })
 public class Lockio {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    //TODO ADD ANNOTATION TO LINK LOCKIO WITH BLOCK
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.MERGE)
+    @ManyToOne(optional = false, cascade = CascadeType.MERGE)
     @JoinColumn (name="block_id")
     @JsonIgnore
     private Block block;
 
     //TODO ADD ANNOTATION TO LINK AND AUTO INCREMENT LOCAL ID
     @Column(name = "local_id")
-    private long localId;
+    private Long localId;
 
     @Enumerated(EnumType.STRING)
     private LockioSize size;
