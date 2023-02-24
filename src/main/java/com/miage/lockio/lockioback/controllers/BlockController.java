@@ -38,7 +38,7 @@ public class BlockController {
     }
 
     @GetMapping("/{block-id}/lockios")
-    public List<Lockio> getLockios(@PathVariable("block-id") Long id) {
+    public List<Lockio> getAllLockios(@PathVariable("block-id") Long id) {
         // Call to raspberry to update lockios
         List<Lockio> lockios = this.raspberryService.getLockios();
         for (Lockio lockio : lockios) {
@@ -49,6 +49,8 @@ public class BlockController {
 
     @GetMapping("/{block-id}/lockios/{local-lockio-id}")
     public Lockio getLockio(@PathVariable("block-id") Long blockId, @PathVariable("local-lockio-id") Long localId) {
+        Lockio lockio = this.raspberryService.getLockio(localId);
+        this.lockioService.updateStatusLockio(lockio.getId(), lockio.getStatus());
         return this.lockioRepository.findByBlockIdAndLocalId(blockId, localId);
     }
 

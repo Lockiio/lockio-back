@@ -26,8 +26,9 @@ public class LockioController {
 
     @GetMapping("/{lockio-id}")
     public Lockio getLockio(@PathVariable("lockio-id") Long lockio_id) {
-        Lockio lockio = this.raspberryService.getLockio(lockio_id);
-        this.lockioService.updateStatusLockio(lockio.getId(), lockio.getStatus());
+        Lockio lockio = this.lockioRepository.findById(lockio_id).orElseThrow();
+        Lockio lockioFromRaspberry = this.raspberryService.getLockio(lockio.getLocalId());
+        this.lockioService.updateStatusLockio(lockio.getId(), lockioFromRaspberry.getStatus());
         return this.lockioRepository.findById(lockio_id).orElseThrow();
     }
 

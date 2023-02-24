@@ -31,8 +31,13 @@ public class RaspberryService {
         return lockio.getStatus();
     }
 
+    /*
+     * TODO : getLockio should be handling the exception if the lockio is not found ?
+     *  We also need to handle the routing part on the raspberry, by getting the block_id and local_id
+     *  So we can ask the right instance of a block to update the status of the lockio in the database.
+     */
     /**
-     * Get a unique lockio by id
+     * Get a unique lockio by its id
      * @param id
      * @return Lockio
      */
