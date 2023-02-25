@@ -1,5 +1,6 @@
 package com.miage.lockio.lockioback.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.miage.lockio.lockioback.enums.BlockStatus;
 import com.miage.lockio.lockioback.enums.Privacy;
 import jakarta.persistence.*;
@@ -7,8 +8,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.geo.Point;
 
-import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Getter
@@ -20,15 +22,11 @@ public class Block {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     private String name;
 
-    private String longitude;
-
-    private String latitude;
-
-    private String zone;
+   private Point coordinate;
 
     @Enumerated(EnumType.STRING)
     private BlockStatus status;
@@ -37,5 +35,6 @@ public class Block {
     private Privacy privacy;
 
     @OneToMany(mappedBy = "block")
-    private Collection<Lockio> lockio;
+    @JsonIgnore
+    private List<Lockio> lockio;
 }

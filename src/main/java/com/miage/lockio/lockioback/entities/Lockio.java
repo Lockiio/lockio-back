@@ -1,5 +1,6 @@
 package com.miage.lockio.lockioback.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.miage.lockio.lockioback.enums.LockioSize;
 import com.miage.lockio.lockioback.enums.LockioStatus;
 import jakarta.persistence.*;
@@ -13,22 +14,22 @@ import lombok.Setter;
 @NoArgsConstructor
 @Setter
 @Getter
-@Table(uniqueConstraints = {
+@Table(name="lockio", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"block_id","local_id"})
 })
 public class Lockio {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    //TODO ADD ANNOTATION TO LINK LOCKIO WITH BLOCK
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false, cascade = CascadeType.MERGE)
+    @JoinColumn (name="block_id")
+    @JsonIgnore
     private Block block;
 
     //TODO ADD ANNOTATION TO LINK AND AUTO INCREMENT LOCAL ID
     @Column(name = "local_id")
-    private long localId;
+    private Long localId;
 
     @Enumerated(EnumType.STRING)
     private LockioSize size;
