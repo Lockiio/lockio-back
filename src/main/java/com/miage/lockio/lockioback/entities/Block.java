@@ -26,7 +26,7 @@ public class Block {
 
     private String name;
 
-   private Point coordinate;
+    private Point coordinate;
 
     @Enumerated(EnumType.STRING)
     private BlockStatus status;
@@ -37,4 +37,6 @@ public class Block {
     @OneToMany(mappedBy = "block")
     @JsonIgnore
     private List<Lockio> lockio;
+
+    private String url;
 }

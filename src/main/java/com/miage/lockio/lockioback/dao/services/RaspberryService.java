@@ -1,21 +1,30 @@
 package com.miage.lockio.lockioback.dao.services;
 
+import com.miage.lockio.lockioback.dao.repositories.BlockRepository;
+import com.miage.lockio.lockioback.dao.repositories.LockioRepository;
+import com.miage.lockio.lockioback.entities.Block;
 import com.miage.lockio.lockioback.entities.Lockio;
 import com.miage.lockio.lockioback.enums.LockioStatus;
+import jakarta.persistence.EntityNotFoundException;
+import jdk.swing.interop.SwingInterOpUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 @Service
+@RequiredArgsConstructor
 public class RaspberryService {
-    private static final String RASP_PATH = "http://localhost:5000/api/rasp/1/lockios/";
-    private final RestTemplate restTemplate ;
+    private final RestTemplate restTemplate;
+    private final LockioRepository lockioRepository;
+    private final BlockRepository blockRepository;
 
-    public RaspberryService(RestTemplate restTemplate) {
-        this.restTemplate=restTemplate;
-    }
 
     /**
      * Update the status of a lockio. Returns the status of the lockio updated.
@@ -27,8 +36,11 @@ public class RaspberryService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> request = new HttpEntity<>(action, headers);
-        Lockio lockio = this.restTemplate.patchForObject(RASP_PATH + id, request, Lockio.class);
-        return lockio.getStatus();
+        Lockio lockio = lockioRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        String block_url = lockio.getBlock().getUrl();
+
+        Lockio lockioToUpdate = this.restTemplate.patchForObject(block_url + "lockios/" + id, request, Lockio.class);
+        return lockioToUpdate.getStatus();
     }
 
     /*
@@ -42,7 +54,9 @@ public class RaspberryService {
      * @return Lockio
      */
     public Lockio getLockio(Long id) {
-        Lockio lockio = restTemplate.getForObject(RASP_PATH + id, Lockio.class);
+        Lockio lockioBack = lockioRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        String block_url = lockioBack.getBlock().getUrl();
+        Lockio lockio = restTemplate.getForObject(block_url + "lockios/" + id, Lockio.class);
         return lockio;
     }
 
@@ -50,8 +64,12 @@ public class RaspberryService {
      * Get all lockios
      * @return List<Lockio>
      */
-    public List<Lockio> getLockios() {
-        ResponseEntity<List<Lockio>> response = restTemplate.exchange(RASP_PATH,
+    public List<Lockio> getLockios(Long block_id) {
+        System.out.println(block_id);
+        Block block = blockRepository.findById(block_id).orElseThrow(EntityNotFoundException::new);
+        String block_url = block.getUrl();
+        System.out.println(block_url);
+        ResponseEntity<List<Lockio>> response = restTemplate.exchange(block_url + "lockios/",
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<List<Lockio>>() {

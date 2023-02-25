@@ -27,7 +27,7 @@ public class Lockio {
     @JsonIgnore
     private Block block;
 
-    //TODO ADD ANNOTATION TO LINK AND AUTO INCREMENT LOCAL ID
+    //TODO : create a sequence to increment the local_id properly
     @Column(name = "local_id")
     private Long localId;
 
@@ -36,5 +36,4 @@ public class Lockio {
 
     @Enumerated(EnumType.STRING)
     private LockioStatus status;
-
 }
