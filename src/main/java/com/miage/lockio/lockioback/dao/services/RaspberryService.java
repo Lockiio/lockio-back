@@ -1,0 +1,65 @@
+package com.miage.lockio.lockioback.dao.services;
+
+import com.miage.lockio.lockioback.entities.Lockio;
+import com.miage.lockio.lockioback.enums.LockioStatus;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.*;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
+@Service
+public class RaspberryService {
+    private static final String RASP_PATH = "http://localhost:5000/api/rasp/1/lockios/";
+    private final RestTemplate restTemplate ;
+
+    public RaspberryService(RestTemplate restTemplate) {
+        this.restTemplate=restTemplate;
+    }
+
+    /**
+     * Update the status of a lockio. Returns the status of the lockio updated.
+     * @param id
+     * @param action
+     * @return LockioStatus
+     */
+    public LockioStatus updateStatus(Long id , String action) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> request = new HttpEntity<>(action, headers);
+        Lockio lockio = this.restTemplate.patchForObject(RASP_PATH + id, request, Lockio.class);
+        return lockio.getStatus();
+    }
+
+    /*
+     * TODO : getLockio should be handling the exception if the lockio is not found ?
+     *  We also need to handle the routing part on the raspberry, by getting the block_id and local_id
+     *  So we can ask the right instance of a block to update the status of the lockio in the database.
+     */
+    /**
+     * Get a unique lockio by its id
+     * @param id
+     * @return Lockio
+     */
+    public Lockio getLockio(Long id) {
+        Lockio lockio = restTemplate.getForObject(RASP_PATH + id, Lockio.class);
+        return lockio;
+    }
+
+    /**
+     * Get all lockios
+     * @return List<Lockio>
+     */
+    public List<Lockio> getLockios() {
+        ResponseEntity<List<Lockio>> response = restTemplate.exchange(RASP_PATH,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<Lockio>>() {
+                });
+        List<Lockio> lockios = response.getBody();
+        System.out.println(lockios);
+        return lockios;
+    }
+
+
+}
