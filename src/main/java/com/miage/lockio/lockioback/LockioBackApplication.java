@@ -62,8 +62,8 @@ public class LockioBackApplication implements CommandLineRunner {
         block2.setUrl("http://localhost:8002/api/rasp/1/");
         blockService.addBlock(block2);
         List<Lockio> lockios2 = new ArrayList<>();
-        lockios2.add(new Lockio((long) 1, block2, (long) 1, LockioSize.SMALL, LockioStatus.OCCUPIED));
-        lockios2.add(new Lockio((long) 2, block2, (long) 2, LockioSize.SMALL, LockioStatus.AVAILABLE));
+        lockios2.add(new Lockio((long) 9, block2, (long) 1, LockioSize.SMALL, LockioStatus.OCCUPIED));
+        lockios2.add(new Lockio((long) 10, block2, (long) 2, LockioSize.SMALL, LockioStatus.AVAILABLE));
         lockioService.addLockios(lockios2);
         block1.setLockio(lockios2);
     }
