@@ -6,7 +6,6 @@ import com.miage.lockio.lockioback.entities.Block;
 import com.miage.lockio.lockioback.entities.Lockio;
 import com.miage.lockio.lockioback.enums.LockioStatus;
 import jakarta.persistence.EntityNotFoundException;
-import jdk.swing.interop.SwingInterOpUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
