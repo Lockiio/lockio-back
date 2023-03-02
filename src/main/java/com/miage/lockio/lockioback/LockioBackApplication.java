@@ -1,13 +1,18 @@
 package com.miage.lockio.lockioback;
 
+import com.miage.lockio.lockioback.dao.repositories.BlockRepository;
+import com.miage.lockio.lockioback.dao.repositories.LockioRepository;
 import com.miage.lockio.lockioback.dao.services.BlockService;
+import com.miage.lockio.lockioback.dao.services.LockioCodeService;
 import com.miage.lockio.lockioback.dao.services.LockioService;
 import com.miage.lockio.lockioback.entities.Block;
 import com.miage.lockio.lockioback.entities.Lockio;
+import com.miage.lockio.lockioback.entities.LockioCode;
 import com.miage.lockio.lockioback.enums.BlockStatus;
 import com.miage.lockio.lockioback.enums.LockioSize;
 import com.miage.lockio.lockioback.enums.LockioStatus;
 import com.miage.lockio.lockioback.enums.Privacy;
+import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,16 +22,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootApplication
+@AllArgsConstructor
 public class LockioBackApplication implements CommandLineRunner {
 
-    private BlockService blockService;
-    private LockioService lockioService;
+    private final BlockService blockService;
+    private final LockioService lockioService;
+    private final LockioRepository lockioRepository;
 
-    public LockioBackApplication(BlockService blockService, LockioService lockioService) {
-        this.blockService = blockService;
-        this.lockioService = lockioService;
-    }
-
+    private final LockioCodeService lockioCodeService;
 
     public static void main(String[] args) {
         SpringApplication.run(LockioBackApplication.class, args);
@@ -66,5 +69,13 @@ public class LockioBackApplication implements CommandLineRunner {
         lockios2.add(new Lockio((long) 10, block2, (long) 2, LockioSize.SMALL, LockioStatus.AVAILABLE));
         lockioService.addLockios(lockios2);
         block1.setLockio(lockios2);
+
+        for (Lockio lockio : lockioRepository.findAllByBlockId(block1.getId())) {
+            lockioCodeService.addLockioCode(new LockioCode(lockio, block1));
+        }
+
+        for (Lockio lockio : lockioRepository.findAllByBlockId(block2.getId())) {
+            lockioCodeService.addLockioCode(new LockioCode(lockio, block2));
+        }
     }
 }
