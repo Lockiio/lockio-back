@@ -1,7 +1,6 @@
 package com.miage.lockio.lockioback.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Entity
