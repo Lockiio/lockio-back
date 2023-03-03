@@ -1,6 +1,7 @@
 package com.miage.lockio.lockioback.entities;
 
 import com.miage.lockio.lockioback.enums.BlockStatus;
+import com.miage.lockio.lockioback.enums.Horaires;
 import com.miage.lockio.lockioback.enums.Privacy;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,6 +29,9 @@ public class ApiBlock {
 
     private List<Lockio> lockio;
 
+
+    private Horaires horaires;
+
     public ApiBlock(Block block) {
         this.id = block.getId();
         this.name = block.getName();
@@ -35,6 +39,7 @@ public class ApiBlock {
         this.status = block.getStatus();
         this.privacy = block.getPrivacy();
         this.lockio = block.getLockio();
+        this.horaires=Horaires.EVERYDAYS;
 
 
     }

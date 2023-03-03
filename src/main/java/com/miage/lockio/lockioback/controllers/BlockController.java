@@ -4,6 +4,8 @@ import com.miage.lockio.lockioback.dao.repositories.BlockRepository;
 import com.miage.lockio.lockioback.dao.repositories.LockioRepository;
 import com.miage.lockio.lockioback.dao.services.LockioService;
 import com.miage.lockio.lockioback.dao.services.RaspberryService;
+import com.miage.lockio.lockioback.entities.ApiBlock;
+import com.miage.lockio.lockioback.entities.ApiLockio;
 import com.miage.lockio.lockioback.entities.Block;
 import com.miage.lockio.lockioback.entities.Lockio;
 import com.miage.lockio.lockioback.enums.LockioStatus;
@@ -65,4 +67,36 @@ public class BlockController {
         this.lockioService.updateStatusLockio(global_id, lockioStatus);
         return lockio;
     }
+
+    @GetMapping("/apiLockioTest")
+    public List<ApiBlock> getBlocksAPI() {
+        return this.blockRepository.findAll().stream().map(ApiBlock::new).toList();
+    }
+
+    @GetMapping("/{block-id}/apiLockioTest")
+
+    public ApiBlock getBlockAPI(@PathVariable("block-id") Long id) {
+        return new ApiBlock(this.blockRepository.findById(id).get());
+    }
+
+
+
+    @GetMapping("/{block-id}/lockios/apiLockioTest")
+    public List<ApiLockio> getAllLockiosAPI(@PathVariable("block-id") Long id) {
+        // Call to raspberry to update lockios
+        List<Lockio> lockios = this.raspberryService.getLockios(id);
+        for (Lockio lockio : lockios) {
+            this.lockioService.updateStatusLockio(lockio.getId(), lockio.getStatus());
+        }
+        return this.lockioRepository.findAllByBlockId(id).stream().map(ApiLockio::new).toList();
+    }
+
+    @GetMapping("/{block-id}/lockios/{local-lockio-id}/apiLockioTest")
+    public ApiLockio getLockioAPI(@PathVariable("block-id") Long blockId, @PathVariable("local-lockio-id") Long localId) {
+        Lockio lockio = this.raspberryService.getLockio(localId);
+        this.lockioService.updateStatusLockio(lockio.getId(), lockio.getStatus());
+        return new ApiLockio(this.lockioRepository.findByBlockIdAndLocalId(blockId, localId));
+
+    }
+
 }

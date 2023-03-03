@@ -3,6 +3,7 @@ package com.miage.lockio.lockioback.controllers;
 import com.miage.lockio.lockioback.dao.repositories.LockioRepository;
 import com.miage.lockio.lockioback.dao.services.LockioService;
 import com.miage.lockio.lockioback.dao.services.RaspberryService;
+import com.miage.lockio.lockioback.entities.ApiLockio;
 import com.miage.lockio.lockioback.entities.Lockio;
 import com.miage.lockio.lockioback.enums.LockioStatus;
 import lombok.RequiredArgsConstructor;
@@ -36,5 +37,14 @@ public class LockioController {
         LockioStatus lockioStatus = raspberryService.updateStatus(lockio_id,action);
         this.lockioService.updateStatusLockio(lockio_id,lockioStatus);
         return this.lockioRepository.findById(lockio_id).orElseThrow();
+    }
+
+
+    @GetMapping("/{lockio-id}/apiLockioTest")
+    public ApiLockio getLockioAPI(@PathVariable("lockio-id") Long lockio_id) {
+        Lockio lockio = this.lockioRepository.findById(lockio_id).orElseThrow();
+        Lockio lockioFromRaspberry = this.raspberryService.getLockio(lockio.getLocalId());
+        this.lockioService.updateStatusLockio(lockio.getId(), lockioFromRaspberry.getStatus());
+        return new ApiLockio(this.lockioRepository.findById(lockio_id).orElseThrow());
     }
 }
