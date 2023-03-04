@@ -38,7 +38,6 @@ public class RaspberryService {
         HttpEntity<String> request = new HttpEntity<>(action, headers);
         Lockio lockio = lockioRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         String block_url = lockio.getBlock().getUrl();
-
         Lockio lockioToUpdate = this.restTemplate.patchForObject(block_url + "lockios/" + id, request, Lockio.class);
         return lockioToUpdate.getStatus();
     }
@@ -65,17 +64,14 @@ public class RaspberryService {
      * @return List<Lockio>
      */
     public List<Lockio> getLockios(Long block_id) {
-        System.out.println(block_id);
         Block block = blockRepository.findById(block_id).orElseThrow(EntityNotFoundException::new);
         String block_url = block.getUrl();
-        System.out.println(block_url);
         ResponseEntity<List<Lockio>> response = restTemplate.exchange(block_url + "lockios/",
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<List<Lockio>>() {
                 });
         List<Lockio> lockios = response.getBody();
-        System.out.println(lockios);
         return lockios;
     }
 
