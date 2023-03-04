@@ -6,6 +6,7 @@ import com.miage.lockio.lockioback.dao.services.RaspberryService;
 import com.miage.lockio.lockioback.entities.ApiLockio;
 import com.miage.lockio.lockioback.entities.Lockio;
 import com.miage.lockio.lockioback.enums.LockioStatus;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -28,7 +29,7 @@ public class LockioController {
         Lockio lockio = this.lockioRepository.findById(lockio_id).orElseThrow();
         Lockio lockioFromRaspberry = this.raspberryService.getLockio(lockio.getLocalId());
         this.lockioService.updateStatusLockio(lockio.getId(), lockioFromRaspberry.getStatus());
-        return new ApiLockio(this.lockioRepository.findById(lockio_id).orElseThrow());
+        return new ApiLockio(lockioRepository.findById(lockio_id).orElseThrow(EntityNotFoundException::new));
     }
 
     @PatchMapping("/{lockio-id}")
@@ -36,8 +37,6 @@ public class LockioController {
     public LockioStatus patchLockio(@PathVariable ("lockio-id") Long lockio_id, @RequestBody String action) {
         LockioStatus lockioStatus = raspberryService.updateStatus(lockio_id,action);
         this.lockioService.updateStatusLockio(lockio_id,lockioStatus);
-        return this.lockioRepository.findById(lockio_id).orElseThrow().getStatus();
+        return this.lockioRepository.findById(lockio_id).orElseThrow(EntityNotFoundException::new).getStatus();
     }
-
-
 }

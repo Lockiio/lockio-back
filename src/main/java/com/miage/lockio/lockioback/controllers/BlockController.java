@@ -9,8 +9,12 @@ import com.miage.lockio.lockioback.entities.ApiLockio;
 import com.miage.lockio.lockioback.entities.Lockio;
 import com.miage.lockio.lockioback.enums.LockioStatus;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import java.util.List;
 
 @RestController
@@ -23,7 +27,6 @@ public class BlockController {
     private final BlockRepository blockRepository;
     private final RaspberryService raspberryService;
 
-
     @GetMapping("")
     public List<ApiBlock> getBlocks() {
         return this.blockRepository.findAll().stream().map(ApiBlock::new).toList();
@@ -34,7 +37,6 @@ public class BlockController {
     public ApiBlock getBlock(@PathVariable("block-id") Long id) {
         return new ApiBlock(this.blockRepository.findById(id).get());
     }
-
 
     @GetMapping("/{block-id}/lockios")
     public List<ApiLockio> getAllLockios(@PathVariable("block-id") Long id) {
@@ -50,10 +52,9 @@ public class BlockController {
     public ApiLockio getLockio(@PathVariable("block-id") Long blockId, @PathVariable("local-lockio-id") Long localId) {
         Lockio lockio = this.raspberryService.getLockio(localId);
         this.lockioService.updateStatusLockio(lockio.getId(), lockio.getStatus());
-        return new ApiLockio(this.lockioRepository.findByBlockIdAndLocalId(blockId, localId));
+        return new ApiLockio(this.lockioRepository.findByBlockIdAndLocalId(blockId,localId));
 
     }
-
 
     @PatchMapping("/{block-id}/lockios/{local-lockio-id}")
     //TODO : replace String by LockioStatus for action
@@ -64,5 +65,4 @@ public class BlockController {
         this.lockioService.updateStatusLockio(global_id, lockioStatus);
         return lockio.getStatus();
     }
-
 }

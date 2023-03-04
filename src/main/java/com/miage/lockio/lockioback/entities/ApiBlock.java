@@ -19,14 +19,14 @@ public class ApiBlock {
 
     private BlockStatus status;
 
-    private Hours horaires;
+    private Hours hours;
 
     public ApiBlock(Block block) {
         this.id = block.getId();
         this.name = block.getName();
         this.coordinate = block.getCoordinate();
         this.status = block.getStatus();
-        this.horaires = Hours.EVERYTIME;
+        this.hours = Hours.EVERYTIME;
 
     }
 }
