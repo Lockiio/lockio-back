@@ -6,16 +6,10 @@ import com.miage.lockio.lockioback.dao.services.LockioService;
 import com.miage.lockio.lockioback.dao.services.RaspberryService;
 import com.miage.lockio.lockioback.entities.ApiBlock;
 import com.miage.lockio.lockioback.entities.ApiLockio;
-import com.miage.lockio.lockioback.entities.Block;
 import com.miage.lockio.lockioback.entities.Lockio;
 import com.miage.lockio.lockioback.enums.LockioStatus;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,60 +23,21 @@ public class BlockController {
     private final BlockRepository blockRepository;
     private final RaspberryService raspberryService;
 
+
     @GetMapping("")
-    public List<Block> getBlocks() {
-        return this.blockRepository.findAll();
-    }
-
-    @GetMapping("/{block-id}")
-    public Block getBlocks(@PathVariable("block-id") Long id) {
-        return this.blockRepository.findById(id).get();
-    }
-
-    @GetMapping("/{block-id}/lockios")
-    public List<Lockio> getAllLockios(@PathVariable("block-id") Long id) {
-        // Call to raspberry to update lockios
-        List<Lockio> lockios = this.raspberryService.getLockios(id);
-        for (Lockio lockio : lockios) {
-            this.lockioService.updateStatusLockio(lockio.getId(), lockio.getStatus());
-        }
-        return this.lockioRepository.findAllByBlockId(id);
-    }
-
-    @GetMapping("/{block-id}/lockios/{local-lockio-id}")
-    public Lockio getLockio(@PathVariable("block-id") Long blockId, @PathVariable("local-lockio-id") Long localId) {
-        Lockio lockio = this.raspberryService.getLockio(localId);
-        this.lockioService.updateStatusLockio(lockio.getId(), lockio.getStatus());
-        return this.lockioRepository.findByBlockIdAndLocalId(blockId, localId);
-    }
-
-    @PatchMapping("/{block-id}/lockios/{local-lockio-id}")
-    //TODO : replace String by LockioStatus for action
-    public Lockio patchLockio(@PathVariable("block-id") Long blockId,
-                              @PathVariable("local-lockio-id") Long localId,
-                              @RequestBody String action) {
-        Lockio lockio = this.lockioRepository.findByBlockIdAndLocalId(blockId, localId);
-        Long global_id = lockio.getId();
-        LockioStatus lockioStatus = this.raspberryService.updateStatus(global_id, action);
-        this.lockioService.updateStatusLockio(global_id, lockioStatus);
-        return lockio;
-    }
-
-    @GetMapping("/apiLockioTest")
-    public List<ApiBlock> getBlocksAPI() {
+    public List<ApiBlock> getBlocks() {
         return this.blockRepository.findAll().stream().map(ApiBlock::new).toList();
     }
 
-    @GetMapping("/{block-id}/apiLockioTest")
+    @GetMapping("/{block-id}")
 
-    public ApiBlock getBlockAPI(@PathVariable("block-id") Long id) {
+    public ApiBlock getBlock(@PathVariable("block-id") Long id) {
         return new ApiBlock(this.blockRepository.findById(id).get());
     }
 
 
-
-    @GetMapping("/{block-id}/lockios/apiLockioTest")
-    public List<ApiLockio> getAllLockiosAPI(@PathVariable("block-id") Long id) {
+    @GetMapping("/{block-id}/lockios")
+    public List<ApiLockio> getAllLockios(@PathVariable("block-id") Long id) {
         // Call to raspberry to update lockios
         List<Lockio> lockios = this.raspberryService.getLockios(id);
         for (Lockio lockio : lockios) {
@@ -91,12 +46,23 @@ public class BlockController {
         return this.lockioRepository.findAllByBlockId(id).stream().map(ApiLockio::new).toList();
     }
 
-    @GetMapping("/{block-id}/lockios/{local-lockio-id}/apiLockioTest")
-    public ApiLockio getLockioAPI(@PathVariable("block-id") Long blockId, @PathVariable("local-lockio-id") Long localId) {
+    @GetMapping("/{block-id}/lockios/{local-lockio-id}")
+    public ApiLockio getLockio(@PathVariable("block-id") Long blockId, @PathVariable("local-lockio-id") Long localId) {
         Lockio lockio = this.raspberryService.getLockio(localId);
         this.lockioService.updateStatusLockio(lockio.getId(), lockio.getStatus());
         return new ApiLockio(this.lockioRepository.findByBlockIdAndLocalId(blockId, localId));
 
+    }
+
+
+    @PatchMapping("/{block-id}/lockios/{local-lockio-id}")
+    //TODO : replace String by LockioStatus for action
+    public LockioStatus patchLockio(@PathVariable("block-id") Long blockId, @PathVariable("local-lockio-id") Long localId, @RequestBody String action) {
+        Lockio lockio = this.lockioRepository.findByBlockIdAndLocalId(blockId, localId);
+        Long global_id = lockio.getId();
+        LockioStatus lockioStatus = this.raspberryService.updateStatus(global_id, action);
+        this.lockioService.updateStatusLockio(global_id, lockioStatus);
+        return lockio.getStatus();
     }
 
 }

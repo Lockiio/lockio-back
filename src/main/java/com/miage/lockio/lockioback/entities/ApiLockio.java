@@ -14,8 +14,6 @@ public class ApiLockio {
     private Long id;
 
 
-    private Block block;
-
     private Long localId;
 
 
@@ -25,7 +23,6 @@ public class ApiLockio {
 
     public ApiLockio(Lockio lockio) {
         this.id = lockio.getId();
-        this.block = lockio.getBlock();
         this.localId = lockio.getLocalId();
         this.size = lockio.getSize();
         this.status = lockio.getStatus();
