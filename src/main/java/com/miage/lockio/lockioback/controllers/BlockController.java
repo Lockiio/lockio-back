@@ -34,18 +34,18 @@ public class BlockController {
 
     @GetMapping("/{block-id}")
 
-    public ApiBlock getBlock(@PathVariable("block-id") Long id) {
-        return new ApiBlock(this.blockRepository.findById(id).get());
+    public ApiBlock getBlock(@PathVariable("block-id") Long blockId) {
+        return new ApiBlock(this.blockRepository.findById(blockId).get());
     }
 
     @GetMapping("/{block-id}/lockios")
-    public List<ApiLockio> getAllLockios(@PathVariable("block-id") Long id) {
+    public List<ApiLockio> getAllLockios(@PathVariable("block-id") Long blockId) {
         // Call to raspberry to update lockios
-        List<Lockio> lockios = this.raspberryService.getLockios(id);
+        List<Lockio> lockios = this.raspberryService.getLockios(blockId);
         for (Lockio lockio : lockios) {
             this.lockioService.updateStatusLockio(lockio.getId(), lockio.getStatus());
         }
-        return this.lockioRepository.findAllByBlockId(id).stream().map(ApiLockio::new).toList();
+        return this.lockioRepository.findAllByBlockId(blockId).stream().map(ApiLockio::new).toList();
     }
 
     @GetMapping("/{block-id}/lockios/{local-lockio-id}")
