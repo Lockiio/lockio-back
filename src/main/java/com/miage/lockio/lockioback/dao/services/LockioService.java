@@ -26,7 +26,7 @@ public class LockioService {
      * @param id
      * @param status
      */
-    public void updateStatusLockio(Long id, LockioStatus status){
+    public void updateLockioStatus(Long id, LockioStatus status){
         Lockio lockio = this.lockioRepository.findById(id).orElseThrow();
         lockio.setStatus(status);
         this.lockioRepository.save(lockio);
