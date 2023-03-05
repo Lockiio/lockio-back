@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/lockio/1/lockios")
@@ -28,15 +30,16 @@ public class LockioController {
     public ApiLockio getLockio(@PathVariable("lockio-id") Long lockio_id) {
         Lockio lockio = this.lockioRepository.findById(lockio_id).orElseThrow();
         Lockio lockioFromRaspberry = this.raspberryService.getLockio(lockio.getLocalId());
-        this.lockioService.updateStatusLockio(lockio.getId(), lockioFromRaspberry.getStatus());
+        this.lockioService.updateLockioStatus(lockio.getId(), lockioFromRaspberry.getStatus());
         return new ApiLockio(lockioRepository.findById(lockio_id).orElseThrow(EntityNotFoundException::new));
     }
 
     @PatchMapping("/{lockio-id}")
     //TODO : replace String by LockioStatus for action
-    public LockioStatus patchLockio(@PathVariable ("lockio-id") Long lockio_id, @RequestBody String action) {
-        LockioStatus lockioStatus = raspberryService.updateStatus(lockio_id,action);
-        this.lockioService.updateStatusLockio(lockio_id,lockioStatus);
+    public LockioStatus patchLockio(@PathVariable ("lockio-id") Long lockio_id, @RequestBody Map<String, String> body) {
+        LockioStatus status = LockioStatus.valueOf(body.get("status"));
+        LockioStatus lockioStatus = raspberryService.updateStatus(lockio_id, status);
+        this.lockioService.updateLockioStatus(lockio_id,lockioStatus);
         return this.lockioRepository.findById(lockio_id).orElseThrow(EntityNotFoundException::new).getStatus();
     }
 }
