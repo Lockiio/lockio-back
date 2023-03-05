@@ -1,5 +1,6 @@
 package com.miage.lockio.lockioback.dao.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.miage.lockio.lockioback.dao.repositories.BlockRepository;
 import com.miage.lockio.lockioback.dao.repositories.LockioRepository;
 import com.miage.lockio.lockioback.entities.Block;
@@ -15,8 +16,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
+import java.util.Map;
+
 @Service
 @RequiredArgsConstructor
 public class RaspberryService {
@@ -28,18 +32,28 @@ public class RaspberryService {
     /**
      * Update the status of a lockio. Returns the status of the lockio updated.
      * @param id
-     * @param action
+     * @param status
      * @return LockioStatus
      */
-    public LockioStatus updateStatus(Long id , String action) {
+
+    public LockioStatus updateStatus(Long id, LockioStatus status) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> request = new HttpEntity<>(action, headers);
         Lockio lockio = lockioRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         String block_url = lockio.getBlock().getUrl();
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, String> statusMap = Map.of("status", status.toString());
+        String jsonBody;
+        try {
+            jsonBody = objectMapper.writeValueAsString(statusMap);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Error on serializing the JSON", e);
+        }
+        HttpEntity<String> request = new HttpEntity<>(jsonBody, headers);
         Lockio lockioToUpdate = this.restTemplate.patchForObject(block_url + "lockios/" + id, request, Lockio.class);
         return lockioToUpdate.getStatus();
     }
+
 
     /*
      * TODO : getLockio should be handling the exception if the lockio is not found ?
