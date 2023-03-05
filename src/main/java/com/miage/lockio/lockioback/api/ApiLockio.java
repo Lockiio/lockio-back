@@ -1,5 +1,6 @@
-package com.miage.lockio.lockioback.entities;
+package com.miage.lockio.lockioback.api;
 
+import com.miage.lockio.lockioback.entities.Lockio;
 import com.miage.lockio.lockioback.enums.LockioSize;
 import com.miage.lockio.lockioback.enums.LockioStatus;
 import lombok.Getter;

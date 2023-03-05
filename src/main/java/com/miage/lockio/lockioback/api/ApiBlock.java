@@ -1,5 +1,6 @@
-package com.miage.lockio.lockioback.entities;
+package com.miage.lockio.lockioback.api;
 
+import com.miage.lockio.lockioback.entities.Block;
 import com.miage.lockio.lockioback.enums.BlockStatus;
 import com.miage.lockio.lockioback.enums.Hours;
 import lombok.Getter;

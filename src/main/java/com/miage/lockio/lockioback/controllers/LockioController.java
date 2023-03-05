@@ -3,7 +3,7 @@ package com.miage.lockio.lockioback.controllers;
 import com.miage.lockio.lockioback.dao.repositories.LockioRepository;
 import com.miage.lockio.lockioback.dao.services.LockioService;
 import com.miage.lockio.lockioback.dao.services.RaspberryService;
-import com.miage.lockio.lockioback.entities.ApiLockio;
+import com.miage.lockio.lockioback.api.ApiLockio;
 import com.miage.lockio.lockioback.entities.Lockio;
 import com.miage.lockio.lockioback.enums.LockioStatus;
 import jakarta.persistence.EntityNotFoundException;
