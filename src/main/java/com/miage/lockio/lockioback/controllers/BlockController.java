@@ -65,4 +65,11 @@ public class BlockController {
         this.lockioService.updateStatusLockio(global_id, lockioStatus);
         return lockio.getStatus();
     }
+
+
+    @GetMapping("/{block-id}/lockios/local")
+    public List<Lockio> getAllLockiosLocal(@PathVariable("block-id") Long id) {
+        return this.lockioRepository.findAllByBlockId(id);
+    }
+
 }
