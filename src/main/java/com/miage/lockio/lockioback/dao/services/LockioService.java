@@ -8,12 +8,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class LockioService {
     private final LockioRepository lockioRepository;
-
-    public LockioService(LockioRepository lockioRepository) {
-        this.lockioRepository = lockioRepository;
-    }
 
     /**
      * Add a List of Lockio to the database
@@ -28,7 +25,7 @@ public class LockioService {
      * @param id
      * @param status
      */
-    public void updateStatusLockio(Long id, LockioStatus status){
+    public void updateLockioStatus(Long id, LockioStatus status){
         Lockio lockio = this.lockioRepository.findById(id).orElseThrow();
         lockio.setStatus(status);
         this.lockioRepository.save(lockio);

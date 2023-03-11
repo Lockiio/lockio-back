@@ -1,34 +1,56 @@
 package com.miage.lockio.lockioback.dao.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.miage.lockio.lockioback.dao.repositories.BlockRepository;
+import com.miage.lockio.lockioback.dao.repositories.LockioRepository;
+import com.miage.lockio.lockioback.entities.Block;
 import com.miage.lockio.lockioback.entities.Lockio;
 import com.miage.lockio.lockioback.enums.LockioStatus;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
-@Service
-public class RaspberryService {
-    private static final String RASP_PATH = "http://localhost:5000/api/rasp/1/lockios/";
-    private final RestTemplate restTemplate ;
+import java.util.Map;
 
-    public RaspberryService(RestTemplate restTemplate) {
-        this.restTemplate=restTemplate;
-    }
+@Service
+@RequiredArgsConstructor
+public class RaspberryService {
+    private final RestTemplate restTemplate;
+    private final LockioRepository lockioRepository;
+    private final BlockRepository blockRepository;
 
     /**
      * Update the status of a lockio. Returns the status of the lockio updated.
      * @param id
-     * @param action
+     * @param status
      * @return LockioStatus
      */
-    public LockioStatus updateStatus(Long id , String action) {
+
+    public LockioStatus updateStatus(Long id, LockioStatus status) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> request = new HttpEntity<>(action, headers);
-        Lockio lockio = this.restTemplate.patchForObject(RASP_PATH + id, request, Lockio.class);
-        return lockio.getStatus();
+        Lockio lockio = lockioRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        String block_url = lockio.getBlock().getUrl();
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, String> statusMap = Map.of("status", status.toString());
+        String jsonBody;
+        try {
+            jsonBody = objectMapper.writeValueAsString(statusMap);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Error on serializing the JSON", e);
+        }
+        HttpEntity<String> request = new HttpEntity<>(jsonBody, headers);
+        Lockio lockioToUpdate = this.restTemplate.patchForObject(block_url + "lockios/" + id, request, Lockio.class);
+        return lockioToUpdate.getStatus();
     }
 
     /*
@@ -42,7 +64,9 @@ public class RaspberryService {
      * @return Lockio
      */
     public Lockio getLockio(Long id) {
-        Lockio lockio = restTemplate.getForObject(RASP_PATH + id, Lockio.class);
+        Lockio lockioBack = lockioRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        String block_url = lockioBack.getBlock().getUrl();
+        Lockio lockio = restTemplate.getForObject(block_url + "lockios/" + id, Lockio.class);
         return lockio;
     }
 
@@ -50,14 +74,15 @@ public class RaspberryService {
      * Get all lockios
      * @return List<Lockio>
      */
-    public List<Lockio> getLockios() {
-        ResponseEntity<List<Lockio>> response = restTemplate.exchange(RASP_PATH,
+    public List<Lockio> getLockios(Long block_id) {
+        Block block = blockRepository.findById(block_id).orElseThrow(EntityNotFoundException::new);
+        String block_url = block.getUrl();
+        ResponseEntity<List<Lockio>> response = restTemplate.exchange(block_url + "lockios/",
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<List<Lockio>>() {
                 });
         List<Lockio> lockios = response.getBody();
-        System.out.println(lockios);
         return lockios;
     }
 
