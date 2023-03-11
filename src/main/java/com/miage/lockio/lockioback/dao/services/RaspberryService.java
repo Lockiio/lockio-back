@@ -28,7 +28,6 @@ public class RaspberryService {
     private final LockioRepository lockioRepository;
     private final BlockRepository blockRepository;
 
-
     /**
      * Update the status of a lockio. Returns the status of the lockio updated.
      * @param id
@@ -53,7 +52,6 @@ public class RaspberryService {
         Lockio lockioToUpdate = this.restTemplate.patchForObject(block_url + "lockios/" + id, request, Lockio.class);
         return lockioToUpdate.getStatus();
     }
-
 
     /*
      * TODO : getLockio should be handling the exception if the lockio is not found ?

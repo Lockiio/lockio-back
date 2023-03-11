@@ -91,5 +91,4 @@ public class BlockController {
     public List<Lockio> getAllLockiosLocal(@PathVariable("block-id") Long id) {
         return this.lockioRepository.findAllByBlockId(id);
     }
-
 }
