@@ -36,4 +36,7 @@ public class Lockio {
 
     @Enumerated(EnumType.STRING)
     private LockioStatus status;
+
+    private int redGPIOPin;
+    private int greenGPIOPin;
 }

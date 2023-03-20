@@ -73,15 +73,26 @@ public class BlockController {
         boolean isAvailable = lockio.getStatus().equals(LockioStatus.AVAILABLE) && body.get("status").equals(LockioStatus.AVAILABLE.toString());
         if (isAvailable && body.get("code") == null) {
             String newCode = this.lockioCodeService.updateLockioCode(lockioCode);
-            this.raspberryService.updateStatus(lockio.getId(), LockioStatus.OCCUPIED);
-            this.lockioService.updateLockioStatus(lockio.getId(), LockioStatus.OCCUPIED);
+            LockioStatus status;
+            if (body.get("action") != null && body.get("action").equals("PRERESERVE")) {
+                status = LockioStatus.PRERESERVED;
+            } else {
+                status = LockioStatus.OCCUPIED;
+            }
+            this.raspberryService.updateStatus(lockio.getId(), status);
+            this.lockioService.updateLockioStatus(lockio.getId(), status);
             return new ApiStatusCodeLockio(lockio.getStatus().toString(), newCode);
         } else if (body.get("code") != null) {
+            if (lockio.getStatus().equals(LockioStatus.PRERESERVED)
+                    && body.get("code").equals(lockioCode.getCode())) {
+                this.raspberryService.updateStatus(lockio.getId(), LockioStatus.OCCUPIED);
+                this.lockioService.updateLockioStatus(lockio.getId(), LockioStatus.OCCUPIED);
+            }
             if (this.lockioCodeService.resetLockioCode(lockioCode, body.get("code"))) {
                 this.raspberryService.updateStatus(lockio.getId(), LockioStatus.AVAILABLE);
                 this.lockioService.updateLockioStatus(lockio.getId(), LockioStatus.AVAILABLE);
                 return new ApiStatusCodeLockio(lockio.getStatus().toString(), null);
-            };
+            }
         }
         return new ApiStatusCodeLockio(lockio.getStatus().toString(), null);
     }

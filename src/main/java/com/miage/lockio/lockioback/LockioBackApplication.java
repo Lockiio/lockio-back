@@ -1,6 +1,5 @@
 package com.miage.lockio.lockioback;
 
-import com.miage.lockio.lockioback.dao.repositories.BlockRepository;
 import com.miage.lockio.lockioback.dao.repositories.LockioRepository;
 import com.miage.lockio.lockioback.dao.services.BlockService;
 import com.miage.lockio.lockioback.dao.services.LockioCodeService;
@@ -49,21 +48,21 @@ public class LockioBackApplication implements CommandLineRunner {
 
     public static void addLockios1(LockioService lockioService, Block block) {
         List<Lockio> lockios1 = new ArrayList<>();
-        lockios1.add(new Lockio((long) 1, block, (long) 1, LockioSize.SMALL, LockioStatus.AVAILABLE));
-        lockios1.add(new Lockio((long) 2, block, (long) 2, LockioSize.SMALL, LockioStatus.AVAILABLE));
-        lockios1.add(new Lockio((long) 3, block, (long) 3, LockioSize.MEDIUM, LockioStatus.AVAILABLE));
-        lockios1.add(new Lockio((long) 4, block, (long) 4, LockioSize.MEDIUM, LockioStatus.AVAILABLE));
-        lockios1.add(new Lockio((long) 5, block, (long) 5, LockioSize.MEDIUM, LockioStatus.AVAILABLE));
-        lockios1.add(new Lockio((long) 6, block, (long) 6, LockioSize.MEDIUM, LockioStatus.AVAILABLE));
-        lockios1.add(new Lockio((long) 7, block, (long) 7, LockioSize.LARGE, LockioStatus.AVAILABLE));
-        lockios1.add(new Lockio((long) 8, block, (long) 8, LockioSize.LARGE, LockioStatus.AVAILABLE));
+        lockios1.add(new Lockio((long) 1, block, (long) 1, LockioSize.SMALL, LockioStatus.AVAILABLE,14,15));
+        lockios1.add(new Lockio((long) 2, block, (long) 2, LockioSize.SMALL, LockioStatus.AVAILABLE,18,23));
+        lockios1.add(new Lockio((long) 3, block, (long) 3, LockioSize.MEDIUM, LockioStatus.AVAILABLE,24,25));
+        lockios1.add(new Lockio((long) 4, block, (long) 4, LockioSize.MEDIUM, LockioStatus.AVAILABLE,12,16));
+        lockios1.add(new Lockio((long) 5, block, (long) 5, LockioSize.MEDIUM, LockioStatus.AVAILABLE,4,17));
+        lockios1.add(new Lockio((long) 6, block, (long) 6, LockioSize.MEDIUM, LockioStatus.AVAILABLE,13,26));
+        lockios1.add(new Lockio((long) 7, block, (long) 7, LockioSize.LARGE, LockioStatus.AVAILABLE,22,27));
+        lockios1.add(new Lockio((long) 8, block, (long) 8, LockioSize.LARGE, LockioStatus.AVAILABLE,5,6));
         lockioService.addLockios(lockios1);
     }
 
     public static void addLockios2(LockioService lockioService, Block block) {
         List<Lockio> lockios2 = new ArrayList<>();
-        lockios2.add(new Lockio((long) 9, block, (long) 1, LockioSize.SMALL, LockioStatus.AVAILABLE));
-        lockios2.add(new Lockio((long) 10, block, (long) 2, LockioSize.SMALL, LockioStatus.AVAILABLE));
+        lockios2.add(new Lockio((long) 9, block, (long) 1, LockioSize.SMALL, LockioStatus.AVAILABLE,0,0));
+        lockios2.add(new Lockio((long) 10, block, (long) 2, LockioSize.SMALL, LockioStatus.AVAILABLE,0,0));
         lockioService.addLockios(lockios2);
     }
     @Override
